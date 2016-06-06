@@ -101,9 +101,10 @@ public class MorozovCubicTimeExample {
 
     Iterator<Simplex> iterator = streamList.iterator();
     Simplex simplex;
+    int filtrationIndex = 0;
     while(iterator.hasNext()){
       simplex = iterator.next();
-      stream.addElement(simplex, simplex.getDimension());
+      stream.addElement(simplex, filtrationIndex++);
     }
 
     return stream;

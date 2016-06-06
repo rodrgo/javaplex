@@ -1,6 +1,7 @@
 package edu.stanford.math.plex4.streams.utility;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import edu.stanford.math.plex4.graph.AbstractUndirectedGraph;
@@ -26,6 +27,53 @@ import edu.stanford.math.primitivelib.autogen.pair.ObjectObjectPair;
  *
  */
 public class StreamUtility {
+
+	/**
+	 * Get the binary matrix of the stream in Compressed Column Storage
+	 * 
+   * @author Rodrigo Mendoza Smith
+	 * @param <T> the type of the basis elements
+	 * @param stream the stream to search
+	 * @return List containing rows[] and cols[].
+	 */
+	public static <T> List<ArrayList<Integer>> getCompressedBoundaryMatrix(AbstractFilteredStream<T> stream) {
+
+    // Create index of simplex ordering
+    HashMap<T, Integer> indexMap = new HashMap<T, Integer>(stream.getSize());
+    // index=1 is a dummy simplex for non-zero element of (-1)-st reduced homology group.
+    int index = 2;
+    int maxDimension = 0;
+    for (T element: stream){
+      indexMap.put(element, index++);
+      maxDimension = stream.getDimension(element) > maxDimension ? stream.getDimension(element) : maxDimension;
+    }
+		
+    ArrayList<Integer> rows = new ArrayList<Integer>();
+    ArrayList<Integer> cols = new ArrayList<Integer>();
+    T[] elementBoundary;
+
+    int colIndex;
+
+		for (T element: stream) {
+      elementBoundary = stream.getBoundary(element);
+      colIndex = indexMap.get(element);
+      if (elementBoundary.length == 0) {
+        rows.add(1);
+        cols.add(colIndex);
+      } else {
+        for (int i = 0; i < elementBoundary.length; i++){
+          rows.add(indexMap.get(elementBoundary[i]));
+          cols.add(colIndex);
+        }
+      }
+		}
+
+		List<ArrayList<Integer>> ccsList = new ArrayList<ArrayList<Integer>>(2);
+    ccsList.add(rows);
+    ccsList.add(cols);
+		
+		return ccsList;
+	}
 	
 	/**
 	 * This function dumps the k-skeleton of a chain complex into a list.
