@@ -70,6 +70,7 @@
 		<mkdir dir="${dist.dir}" />
 		<mkdir dir="${test.dir}" />
 		<mkdir dir="${temp.dir}" />
+		<mkdir dir="${doc.dir}" />
 	</target>
 
 	<!--Documentation targets-->
