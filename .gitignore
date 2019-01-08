@@ -5,3 +5,8 @@
 *.war
 *.ear
 /bin/
+
+build
+dist
+build.number
+
